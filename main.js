@@ -1,30 +1,45 @@
 let todoInput, errorInfo, addBtn, ulList, newTodo, newTool,
-    newBtn1, newBtn2, newBtn3,
-    iElement1, iElement2;
+    popup, popupInfo, todoToEdit,
+    popupInput, popupAddBtn, popupCloseBtn;
+
 
 const main = () => {
-    prepareDOMElements()
-    prepareDOMEvents()
+    // wywyłouje nasze funkcje
+    prepareDOMElements();
+    prepareDOMEvents();
 }
 
 const prepareDOMElements = () => {
+    // pobieramy wszystkie elementy
     todoInput = document.querySelector('.todo-input')
     errorInfo = document.querySelector('.error-info')
     addBtn = document.querySelector('.btn-add')
     ulList = document.querySelector('.todolist ul')
+
+    popup = document.querySelector('.popup')
+    popupInfo = document.querySelector('.popup-info')
+    popupInput = document.querySelector('.popup-input')
+    popupAddBtn = document.querySelector('.accept')
+    popupCloseBtn = document.querySelector('.cancel')
+
 }
 
 const prepareDOMEvents = () => {
-    addBtn.addEventListener('click', addNewTodo)
-    addBtn.addEventListener('click', createToolsArea)
+    // nadajemy nasłuchiwanie 
+    addBtn.addEventListener('click', addNewTodo);
+    ulList.addEventListener('click', checkClick);
+    popupCloseBtn.addEventListener('click', closePopup);
+    popupAddBtn.addEventListener('click', changeTodoText)
 }
 
 const addNewTodo = () => {
     if (todoInput.value !== '') {
-        newTodo = document.createElement('li')
+        newTodo = document.createElement('li');
         newTodo.textContent = todoInput.value
-        ulList.append(newTodo)
+        console.log(newTodo);
+        createToolsArea()
 
+        ulList.append(newTodo)
         todoInput.value = ''
         errorInfo.textContent = ''
 
@@ -34,78 +49,69 @@ const addNewTodo = () => {
 }
 
 const createToolsArea = () => {
-    newTool = document.createElement('div')
-    newTool.classList.add("tools")
-    newTodo.append(newTool)
 
-    newBtn1 = document.createElement('button')
-    newBtn1.classList.add("complete")
-    newTool.append(newBtn1)
-    iElement1 = document.createElement('i')
-    iElement1.classList.add('fas')
-    iElement1.classList.add('fa-check')
-    newBtn1.append(iElement1)
+    const toolsPanel = document.createElement('div')
+    toolsPanel.classList.add('tools')
+    newTodo.append(toolsPanel)
 
-    newBtn2 = document.createElement('button')
-    newBtn2.classList.add("edit")
-    newBtn2.textContent = 'EDIT'
-    newTool.append(newBtn2)
+    const completeBtn = document.createElement('button')
+    completeBtn.classList.add('complete')
+    completeBtn.innerHTML = '<i class="fas fa-check"></i>'
 
-    newBtn3 = document.createElement('button')
-    newBtn3.classList.add("delete")
-    newTool.append(newBtn3)
-    iElement2 = document.createElement('i')
-    iElement2.classList.add('fas')
-    iElement2.classList.add('fa-times')
-    newBtn3.append(iElement2)
+    const editBtn = document.createElement('button')
+    editBtn.classList.add('edit')
+    editBtn.textContent = 'EDIT'
+
+    const deleteBtn = document.createElement('button')
+    deleteBtn.classList.add('delete')
+    deleteBtn.innerHTML = '<i class="fas fa-times"></i>'
+
+    toolsPanel.append(completeBtn, editBtn, deleteBtn)
+}
+
+const checkClick = e => {
+    if (e.target.matches('.complete')) {
+        console.log('completed');
+        e.target.closest('li').classList.toggle('completed');
+        e.target.classList.toggle('completed')
+
+    } else if (e.target.matches('.edit')) {
+        editTodo(e);
+
+    } else if (e.target.matches('.delete')) {
+        deleteTodo(e)
+    }
+}
+
+const editTodo = (e) => {
+    todoToEdit = e.target.closest('li')
+    popupInput.value = todoToEdit.firstChild.textContent
+    popup.style.display = 'flex';
+}
+
+const closePopup = () => {
+    popup.style.display = 'none';
+    popupInfo.textContent = ''
+}
+
+const changeTodoText = () => {
+    if (popupInput.value !== '') {
+        todoToEdit.firstChild.textContent = popupInput.value
+        closePopup()
+        popupInfo.textContent = ''
+    } else {
+        popupInfo.textContent = 'Musisz podać jakąś treść!'
+    }
+}
+
+const deleteTodo = (e) => {
+
 }
 
 
+
+
+
+
+
 document.addEventListener('DOMContentLoaded', main)
-
-
-
-
-
-
-
-
-
-// const input = document.querySelector('.todo-input') // input
-// const addBtn = document.querySelector('.btn-add') // add buton
-// const taskList = document.querySelector('.todolist') // div with all tasks
-// const errorInfo = document.querySelector('.error-info')
-// const completeBtn = document.querySelector('.fa-check')
-// const editBtn = document.querySelector('.edit')
-// const toolsBtn = document.querySelector('.tools') // tools buttons like check
-// const ulList = document.querySelector("ul");
-// const newDiv = toolsBtn.outerHTML
-// const deleteBtn = document.querySelectorAll('.delete')
-
-
-// let li2 = []
-// let li
-
-// const addTask = () => {
-//     li = document.createElement('li');
-//     ulList.append(li)
-//     li.innerHTML = input.value + newDiv
-
-// }
-
-// let listtt = Array.prototype.slice.call(document.querySelectorAll('.delete'));
-// console.log(listtt[0]);
-
-// // console.log(li);
-// // console.log(deleteBtn);
-
-// for (let i = 0; i < deleteBtn.length; i++) {
-//     deleteBtn[i].addEventListener('click', function () {
-//         let closestLi = deleteBtn[i].parentElement.parentElement;
-//         closestLi.remove()
-//         console.log(deleteBtn[i]);
-//     })
-// }
-
-// addBtn.addEventListener('click', addTask)
-
