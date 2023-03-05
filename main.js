@@ -21,15 +21,22 @@ const prepareDOMElements = () => {
     popupInput = document.querySelector('.popup-input')
     popupAddBtn = document.querySelector('.accept')
     popupCloseBtn = document.querySelector('.cancel')
-
 }
+
+// const showErrorInfo = () => {
+//     console.log(errorInfo.textContent);
+// }
+
+// showErrorInfo()
 
 const prepareDOMEvents = () => {
     // nadajemy nasłuchiwanie 
     addBtn.addEventListener('click', addNewTodo);
     ulList.addEventListener('click', checkClick);
     popupCloseBtn.addEventListener('click', closePopup);
-    popupAddBtn.addEventListener('click', changeTodoText)
+    popupAddBtn.addEventListener('click', changeTodoText);
+    todoInput.addEventListener('keyup', checkKeyEnter)
+
 }
 
 const addNewTodo = () => {
@@ -104,14 +111,18 @@ const changeTodoText = () => {
     }
 }
 
-const deleteTodo = (e) => {
-
+const deleteTodo = e => {
+    e.target.closest('li').remove()
+    const allTodos = ulList.querySelectorAll('li')
+    if (allTodos.length === 0) {
+        errorInfo.textContent = 'Brak zadań na liście.'
+    }
 }
 
-
-
-
-
-
+const checkKeyEnter = e => {
+    if (e.key === 'Enter') {
+        addNewTodo()
+    }
+}
 
 document.addEventListener('DOMContentLoaded', main)
